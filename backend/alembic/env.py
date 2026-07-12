@@ -9,10 +9,13 @@ from app.database import Base
 from app import models
 
 config = context.config
+
+# Set the database URL dynamically from application settings
 config.set_main_option("sqlalchemy.url", get_settings().database_url)
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
+# Metadata used by Alembic to compare models with the database schema
 target_metadata = Base.metadata
 
 
