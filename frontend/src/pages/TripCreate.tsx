@@ -44,25 +44,25 @@ export function TripCreate() {
   return (
     <div className="grid gap-6 xl:grid-cols-[380px_1fr]">
       <section>
-        <h1 className="text-2xl font-bold font-display text-text-primary">Smart Dispatch</h1>
+        <h1 className="text-2xl font-bold font-display uppercase tracking-wide text-ink-hi">Smart Dispatch</h1>
         {trip && prefilledVehicleId && prefilledDriverId && (
-          <div className="mt-4 glass-panel-primary p-4 text-sm text-text-primary">
-            <p className="font-semibold text-accent-signal">Prefilled rebalance assignment</p>
-            <p className="mt-1 text-text-muted">Trip <span className="font-mono text-text-primary">{trip.id.slice(0, 8)}</span> · Vehicle <span className="font-mono text-text-primary">{prefilledVehicleId.slice(0, 8)}</span> · Driver <span className="font-mono text-text-primary">{prefilledDriverId.slice(0, 8)}</span></p>
-            <button onClick={dispatchPrefilled} className="focus-ring mt-3 rounded bg-accent-live px-4 py-2 font-semibold text-bg-base">Dispatch suggested assignment</button>
+          <div className="mt-4 bg-panel border border-hairline rounded-lg p-5 text-sm text-ink-hi">
+            <p className="font-semibold text-status-warn uppercase tracking-wider">Prefilled rebalance assignment</p>
+            <p className="mt-2 text-ink-low">Trip <span className="font-mono text-ink-hi">{trip.id.slice(0, 8)}</span> · Vehicle <span className="font-mono text-ink-hi">{prefilledVehicleId.slice(0, 8)}</span> · Driver <span className="font-mono text-ink-hi">{prefilledDriverId.slice(0, 8)}</span></p>
+            <button onClick={dispatchPrefilled} className="mt-4 w-full rounded-md bg-accent hover:bg-accent/90 transition-colors px-4 py-2 font-semibold text-bg-deep">Dispatch suggested assignment</button>
           </div>
         )}
-        <form onSubmit={score} className="mt-4 space-y-3 glass-panel p-4">
-          {Object.keys(form).map((key) => <label key={key} className="block text-sm font-medium capitalize text-text-primary">{key.replace("_", " ")}<input className="focus-ring mt-1 w-full px-3 py-2" value={(form as any)[key]} onChange={(e) => setForm({ ...form, [key]: e.target.value })} /></label>)}
-          <button className="focus-ring w-full rounded bg-accent-live px-4 py-2 font-semibold text-bg-base">Create draft and score</button>
+        <form onSubmit={score} className="mt-4 space-y-4 bg-panel border border-hairline rounded-lg p-5">
+          {Object.keys(form).map((key) => <label key={key} className="block text-sm font-medium capitalize text-ink-hi">{key.replace("_", " ")}<input className="mt-1 w-full bg-bg-deep border border-hairline text-ink-hi px-4 py-2 rounded-md focus:border-accent focus:outline-none transition-colors" value={(form as any)[key]} onChange={(e) => setForm({ ...form, [key]: e.target.value })} /></label>)}
+          <button className="w-full rounded-md bg-accent hover:bg-accent/90 transition-colors px-4 py-2 font-semibold text-bg-deep">Create draft and score</button>
         </form>
       </section>
       <section>
-        <div className="mb-3 flex items-center justify-between"><h2 className="font-semibold font-display text-text-primary">Ranked Assignments</h2>{trip && <span className="text-sm font-mono text-text-muted">Trip status: {trip.status}</span>}</div>
-        <div className="space-y-3">
+        <div className="mb-4 flex items-center justify-between"><h2 className="font-semibold font-body text-ink-hi tracking-wide">Ranked Assignments</h2>{trip && <span className="text-sm font-mono text-ink-low">Trip status: {trip.status}</span>}</div>
+        <div className="space-y-4">
           {pairs.map((pair) => <DispatchScoreCard key={`${pair.vehicle.id}-${pair.driver.id}`} pair={pair} selected={selected === pair} onSelect={() => setSelected(pair)} />)}
         </div>
-        {selected && <button onClick={dispatch} className="focus-ring mt-4 rounded bg-accent-live px-4 py-2 font-semibold text-bg-base">Dispatch selected pair</button>}
+        {selected && <button onClick={dispatch} className="mt-5 w-full rounded-md bg-accent hover:bg-accent/90 transition-colors px-4 py-3 font-semibold text-bg-deep">Dispatch selected pair</button>}
       </section>
     </div>
   );

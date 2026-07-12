@@ -22,7 +22,7 @@ export function Dashboard() {
   ];
   return (
     <div className="space-y-6">
-      <header><h1 className="text-2xl font-bold font-display text-text-primary">Operations Dashboard</h1><p className="mt-1 text-sm text-text-muted">Live fleet capacity, trip flow, and health signals.</p></header>
+      <header><h1 className="text-2xl font-bold font-body text-ink-hi uppercase tracking-wide">Operations Dashboard</h1><p className="mt-2 text-sm text-ink-low">Live fleet capacity, trip flow, and health signals.</p></header>
       
       <div>
         <ConflictRadarPanel />
@@ -39,12 +39,12 @@ export function Dashboard() {
         <div className="flex-1 animate-fade-in-up" style={{ animationDelay: '120ms' }}><KpiCard label="Utilization" value={`${kpis.utilization_pct ?? 0}%`} icon={Route} /></div>
       </div>
       <div className="grid gap-6 xl:grid-cols-[1fr_1.4fr]">
-        <section className="bg-panel rounded-xl hairline p-4">
-          <h2 className="mb-4 flex items-center gap-2 font-semibold text-text-primary font-display"><ClipboardList size={16} strokeWidth={1.5} />Trip & Maintenance Load</h2>
-          <ResponsiveContainer width="100%" height={260}><BarChart data={chart}><XAxis dataKey="name" stroke="#7C8598" fontSize={12} tickLine={false} axisLine={false} /><YAxis allowDecimals={false} stroke="#7C8598" fontSize={12} tickLine={false} axisLine={false} /><Tooltip contentStyle={{ backgroundColor: '#1A2130', border: '1px solid #232B3B', color: '#E7EAF0' }} /><Bar dataKey="value" fill="#2DD4BF" radius={[2, 2, 0, 0]} /></BarChart></ResponsiveContainer>
+        <section className="bg-panel border border-hairline rounded-xl p-5">
+          <h2 className="mb-5 flex items-center gap-2 font-semibold text-ink-hi font-body border-b border-hairline pb-4"><ClipboardList size={18} strokeWidth={1.5} className="text-accent" />Trip & Maintenance Load</h2>
+          <ResponsiveContainer width="100%" height={260}><BarChart data={chart}><XAxis dataKey="name" stroke="#B8BAC2" fontSize={11} tickLine={false} axisLine={false} tick={{ fontFamily: 'JetBrains Mono' }} /><YAxis allowDecimals={false} stroke="#B8BAC2" fontSize={11} tickLine={false} axisLine={false} tick={{ fontFamily: 'JetBrains Mono' }} /><Tooltip contentStyle={{ backgroundColor: '#1A1D24', border: '1px solid rgba(255,255,255,0.08)', color: '#F5F4F0', fontFamily: 'JetBrains Mono' }} /><Bar dataKey="value" fill="#FF6B4A" radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer>
         </section>
         <section>
-          <h2 className="mb-3 flex items-center gap-2 font-semibold text-text-primary font-display"><Wrench size={16} strokeWidth={1.5} />Fleet Health</h2>
+          <h2 className="mb-4 flex items-center gap-2 font-semibold text-ink-hi font-body"><Wrench size={18} strokeWidth={1.5} className="text-accent" />Fleet Health</h2>
           <FleetHealthGrid items={health} />
         </section>
       </div>

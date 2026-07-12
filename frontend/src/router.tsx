@@ -1,6 +1,6 @@
-import { createBrowserRouter, Navigate, NavLink, Outlet } from "react-router-dom";
+import { createBrowserRouter, Navigate, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { BarChart3, Fuel, Gauge, LogOut, MapPinned, Route, ShieldCheck, Truck, Users, Wrench, ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "./context/AuthContext";
 import { Dashboard } from "./pages/Dashboard";
 import { DriverManagement } from "./pages/DriverManagement";
@@ -12,6 +12,7 @@ import { StatusWall } from "./pages/StatusWall";
 import { TripCreate } from "./pages/TripCreate";
 import { TripManagement } from "./pages/TripManagement";
 import { VehicleRegistry } from "./pages/VehicleRegistry";
+import Landing from "./pages/Landing";
 
 const RadarIcon = () => (
   <div className="relative flex h-5 w-5 items-center justify-center rounded-full border border-accent-live/30">
@@ -25,60 +26,95 @@ function Layout() {
   const [collapsed, setCollapsed] = useState(false);
   if (!token) return <Navigate to="/login" replace />;
   const items = [
-    ["/", "Dashboard", Gauge],
-    ["/vehicles", "Vehicles", Truck],
-    ["/drivers", "Drivers", Users],
-    ["/trips", "Trips", Route],
-    ["/status-wall", "Status Wall", MapPinned],
-    ["/dispatch", "Dispatch", ShieldCheck],
-    ["/maintenance", "Maintenance", Wrench],
-    ["/fuel-expense", "Fuel & Cost", Fuel],
-    ["/reports", "Reports", BarChart3]
+    ["/dashboard", "Dashboard", Gauge],
+    ["/dashboard/vehicles", "Vehicles", Truck],
+    ["/dashboard/drivers", "Drivers", Users],
+    ["/dashboard/trips", "Trips", Route],
+    ["/dashboard/status-wall", "Status Wall", MapPinned],
+    ["/dashboard/dispatch", "Dispatch", ShieldCheck],
+    ["/dashboard/maintenance", "Maintenance", Wrench],
+    ["/dashboard/fuel-expense", "Fuel & Cost", Fuel],
+    ["/dashboard/reports", "Reports", BarChart3]
   ] as const;
   return (
-    <div className="min-h-screen">
-      <aside className={`fixed inset-y-0 left-0 hidden lg:flex flex-col transition-all duration-200 ${collapsed ? 'w-[76px]' : 'w-[280px]'} sidebar`}>
-        <div className="flex h-16 items-center justify-between px-4 text-lg font-bold font-display text-text-primary">
-          <div className="flex items-center gap-3">
-            <RadarIcon />
-            {!collapsed && <span>TransitOps</span>}
-          </div>
-          <button onClick={() => setCollapsed(!collapsed)} className="text-text-muted hover:text-text-primary hover:bg-panel-raised rounded-full p-1.5 transition-colors">
-            {collapsed ? <ChevronRight size={20}/> : <ChevronLeft size={20}/>}
-          </button>
-        </div>
-        <div className="mx-4 mb-4 mt-2 h-px bg-white/10"></div>
-        <nav className="flex-1 space-y-1 overflow-y-auto">
-          {items.map(([to, label, Icon]) => (
-            <NavLink key={to} to={to} title={collapsed ? label : undefined} className={({ isActive }) => `nav-item flex items-center ${collapsed ? 'justify-center' : ''} gap-3 ${isActive ? "active" : ""}`}>
-              <Icon size={18} strokeWidth={1.5} />{!collapsed && <span>{label}</span>}
-            </NavLink>
-          ))}
-        </nav>
-        <div className="p-3">
+    <div className="min-h-screen bg-bg-deep text-ink-mid font-body">
+      {/* Sidebar */}
+      <nav className={`fixed inset-y-0 left-0 z-50 flex flex-col bg-panel border-r border-hairline transition-all duration-300 ${collapsed ? "w-20" : "w-64"}`}>
+        <div className="flex items-center justify-between p-4 mb-4 border-b border-hairline">
           {!collapsed && (
-            <div className="mx-2 mb-3 flex items-center gap-3 rounded-xl bg-white/5 p-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent-live/20 text-sm font-bold text-accent-live">FM</div>
-              <div className="overflow-hidden">
-                <p className="truncate text-sm font-semibold text-text-primary">Sarah Miller</p>
-                <p className="text-xs text-text-muted">Fleet Manager</p>
-              </div>
+            <div className="flex items-center gap-2 font-display tracking-widest text-lg text-ink-hi uppercase">
+              <span className="w-2 h-2 rounded-full bg-accent animate-pulse-live" />
+              TransitOps
             </div>
           )}
-          <button onClick={logout} title={collapsed ? "Sign out" : undefined} className={`focus-ring w-full flex items-center ${collapsed ? 'justify-center' : ''} gap-2 px-3 py-2 text-sm text-text-muted hover:text-text-primary hover:bg-white/10 transition-colors rounded-lg`}><LogOut size={18} strokeWidth={1.5} />{!collapsed && <span>Sign out</span>}</button>
+          <button onClick={() => setCollapsed(!collapsed)} className="p-2 text-ink-low hover:text-ink-hi hover:bg-panel-alt rounded-lg transition-colors">
+            {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
+          </button>
         </div>
-      </aside>
-      <main className={`transition-all duration-200 ${collapsed ? 'lg:pl-[76px]' : 'lg:pl-[280px]'}`}>
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8"><Outlet /></div>
+        <div className="flex-1 overflow-y-auto py-2 flex flex-col gap-1">
+          {items.map(([path, label, Icon]) => (
+            <NavLink key={path} to={path} end className={({ isActive }) => `nav-item flex items-center gap-3 ${isActive ? "active" : ""} ${collapsed ? "justify-center" : ""}`} title={collapsed ? label : undefined}>
+              <Icon size={20} />
+              {!collapsed && <span>{label}</span>}
+            </NavLink>
+          ))}
+        </div>
+        
+        {/* User Profile Area */}
+        <div className="p-4 border-t border-hairline bg-panel-alt/50 m-2 rounded-xl">
+          <div className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'}`}>
+            <div className="w-8 h-8 rounded-full bg-accent text-bg-deep flex items-center justify-center font-bold text-sm shrink-0">
+              M
+            </div>
+            {!collapsed && (
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-ink-hi truncate">Manager</p>
+                <p className="text-xs text-ink-low truncate">Operations</p>
+              </div>
+            )}
+            {!collapsed && (
+              <button onClick={logout} className="p-2 text-ink-low hover:text-accent rounded-lg transition-colors">
+                <LogOut size={16} />
+              </button>
+            )}
+          </div>
+          {collapsed && (
+            <button onClick={logout} className="w-full mt-4 p-2 flex justify-center text-ink-low hover:text-accent rounded-lg transition-colors" title="Sign out">
+              <LogOut size={16} />
+            </button>
+          )}
+        </div>
+      </nav>
+      {/* Main Content */}
+      <main className={`transition-all duration-300 ${collapsed ? "ml-20" : "ml-64"} p-8`}>
+        <Outlet />
       </main>
     </div>
   );
 }
 
+function AutoLoginDemo() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    login("manager@transitops.io", "TransitOps123")
+      .then(() => navigate("/dashboard", { replace: true }))
+      .catch((err) => {
+        console.error("Demo login failed:", err);
+        navigate("/login");
+      });
+  }, [login, navigate]);
+
+  return <div className="min-h-screen bg-bg-deep flex items-center justify-center text-ink-low font-body tracking-wider uppercase">Loading demo...</div>;
+}
+
 export const router = createBrowserRouter([
+  { path: "/", element: <Landing /> },
+  { path: "/demo", element: <AutoLoginDemo /> },
   { path: "/login", element: <Login /> },
   {
-    path: "/",
+    path: "/dashboard",
     element: <Layout />,
     children: [
       { index: true, element: <Dashboard /> },

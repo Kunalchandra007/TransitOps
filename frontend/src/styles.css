@@ -3,105 +3,68 @@
 @tailwind utilities;
 
 :root {
-  --land-bg: #F4F3EF;        /* warm off-white, not pure white */
-  --land-ink: #0A0A0A;
-  --land-muted: #6B6D70;
-  --land-line: rgba(10,10,10,0.10);
-  --dot-live: #2DD4BF;       /* reuse your app's live-status color */
-  --dot-signal: #F5A623;     /* reuse your app's warning color */
-  --dot-critical: #F0553D;
+  --bg-deep:      #0F1115;
+  --bg-panel:     #1A1D24;
+  --bg-panel-alt: #22262F;
+  --ink-hi:       #F5F4F0;
+  --ink-mid:      #B8BAC2;
+  --ink-low:      #9AA3B8;
+  --accent:       #FF6B4A;
+  --accent-dim:   rgba(255,107,74,0.12);
+  --status-good:  #4ADE80;
+  --status-warn:  #FBBF24;
+  --status-bad:   #F87171;
+  --hairline:     rgba(255,255,255,0.08);
 }
 
 body {
   margin: 0;
   min-width: 320px;
-  background:
-    radial-gradient(circle at 10% 0%, rgba(99,102,241,0.12), transparent 35%),
-    radial-gradient(circle at 90% 15%, rgba(45,212,191,0.10), transparent 40%),
-    radial-gradient(circle at 50% 100%, rgba(245,166,35,0.06), transparent 45%),
-    #0D1119;
+  background-color: var(--bg-deep);
   min-height: 100vh;
-  @apply text-text-primary font-body;
+  @apply text-ink-mid font-body;
 }
 
-.glass-panel {
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.28);
+input::placeholder, textarea::placeholder { color: var(--ink-low); }
+
+input, select, textarea {
+  font: inherit;
+  background-color: var(--bg-panel-alt);
+  border: 1px solid var(--hairline);
+  color: var(--ink-hi);
+  border-radius: 8px;
 }
 
-input::placeholder, textarea::placeholder { color: rgba(231, 234, 240, 0.35); }
-
-.sidebar {
-  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
-  border-right: 1px solid rgba(255,255,255,0.08);
-  backdrop-filter: blur(20px);
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
 }
 
+.hairline {
+  border: 1px solid var(--hairline);
+}
+
+/* Nav Item base styles for Night Freight */
 .nav-item {
   font-family: 'Inter', sans-serif;
   font-weight: 500;
   font-size: 14px;
-  color: #9AA3B8;
+  color: var(--ink-low);
   padding: 10px 14px;
-  border-radius: 10px;
+  border-radius: 8px;
   margin: 2px 8px;
+  transition: all 0.2s ease;
+  outline: none;
 }
-.nav-item, .nav-item:focus, .nav-item.active, .nav-item.active:focus {
-  outline: none !important;
-  box-shadow: none !important;
-  border: none !important;
-  border-left: 2px solid #2DD4BF !important; /* the only border allowed */
-}
-a:focus-visible { outline: 2px solid transparent; }
-.nav-item svg { opacity: 0.65; }
-.nav-item:hover { background: rgba(255,255,255,0.05); color: #E7EAF0; }
-.nav-item.active { color: #FFFFFF; }
-.nav-item.active svg { opacity: 1; color: #2DD4BF; }
-
-.kpi-value { color: #FFFFFF; font-weight: 700; }
-
-.glass-panel-primary {
-  background: rgba(245, 166, 35, 0.06);
-  border: 1px solid rgba(245, 166, 35, 0.18);
-  backdrop-filter: blur(24px) saturate(150%);
-  border-radius: 16px;
-  position: relative;
-}
-.glass-panel-primary::before {
-  content: '';
-  position: absolute;
-  inset: -40px;
-  background: radial-gradient(circle at 20% 50%, rgba(245,166,35,0.15), transparent 70%);
-  z-index: -1;
-  filter: blur(30px);
-}
-
-input, select, textarea {
-  font: inherit;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #E7EAF0;
-  border-radius: 10px;
-}
-
-.dot-live { box-shadow: 0 0 8px rgba(45,212,191,0.6); }
-.dot-alert { box-shadow: 0 0 8px rgba(239,68,68,0.6); }
-
-.hairline {
-  @apply border border-border-hairline;
-}
+.nav-item svg { opacity: 0.8; }
+.nav-item:hover { background-color: var(--bg-panel-alt); color: var(--ink-hi); }
+.nav-item.active { color: var(--accent); background-color: var(--accent-dim); }
+.nav-item.active svg { opacity: 1; color: var(--accent); }
 
 @media (prefers-reduced-motion: no-preference) {
   .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
   .reveal.visible { opacity: 1; transform: translateY(0); }
-}
-
-.focus-ring {
-  @apply focus:outline-none focus:ring-2 focus:ring-accent-live focus:ring-offset-2 focus:ring-offset-bg-base;
 }
 
 @keyframes radar-sweep {
@@ -129,4 +92,16 @@ input, select, textarea {
   }
   to {
     opacity: 1;
-    transform: translat
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.4s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-radar-sweep, .animate-pulse-live, .animate-fade-in-up {
+    animation: none;
+  }
+}

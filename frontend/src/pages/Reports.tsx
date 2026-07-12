@@ -10,9 +10,9 @@ export function Reports() {
     reportsApi.cost().then((r) => setCost(r.data));
   }, []);
   return (
-    <div className="space-y-5">
-      <header><h1 className="text-2xl font-bold font-display text-text-primary">Reports</h1><p className="mt-1 text-sm text-text-muted">Cost, utilization, fuel efficiency, ROI, and CSV export endpoints are available.</p></header>
-      <div className="glass-panel p-4"><p className="text-sm text-text-muted font-mono uppercase">Operational cost</p><p className="text-3xl font-mono text-text-primary mt-1">${Number(cost.cost ?? 0).toFixed(2)}</p></div>
+    <div className="space-y-6">
+      <header><h1 className="text-2xl font-bold font-display uppercase tracking-wide text-ink-hi">Reports</h1><p className="mt-2 text-sm text-ink-low">Cost, utilization, fuel efficiency, ROI, and CSV export endpoints are available.</p></header>
+      <div className="bg-panel border border-hairline rounded-lg p-5"><p className="text-sm text-ink-low font-mono uppercase tracking-wider">Operational cost</p><p className="text-3xl font-mono font-semibold text-ink-hi mt-2">${Number(cost.cost ?? 0).toFixed(2)}</p></div>
       <DataTable rows={utilization} columns={[
         { key: "vehicle", label: "Vehicle ID", render: (r) => r.vehicle_id ?? "Unassigned" },
         { key: "trips", label: "Completed Trips", render: (r) => r.completed_trips }

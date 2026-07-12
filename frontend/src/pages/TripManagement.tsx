@@ -11,8 +11,8 @@ export function TripManagement() {
     load();
   }, []);
   return (
-    <div className="space-y-5">
-      <header><h1 className="text-2xl font-bold font-display text-text-primary">Trip Management</h1><p className="text-sm text-slate-500">Create new assignments from the Dispatch view.</p></header>
+    <div className="space-y-6">
+      <header><h1 className="text-2xl font-bold font-display uppercase tracking-wide text-ink-hi">Trip Management</h1><p className="text-sm text-ink-low mt-2">Create new assignments from the Dispatch view.</p></header>
       <DataTable rows={rows} columns={[
         { key: "route", label: "Route", render: (r) => `${r.source} → ${r.destination}` },
         { key: "cargo", label: "Cargo", render: (r) => `${r.cargo_weight} kg` },
