@@ -18,7 +18,7 @@ The app is built as a practical operations dashboard rather than a landing page.
 Start everything:
 
 ```powershell
-cd C:\Projects\TransitOps
+cd <path-to-TransitOps>
 docker compose up --build -d
 ```
 
