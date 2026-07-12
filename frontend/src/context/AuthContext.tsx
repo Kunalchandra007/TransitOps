@@ -12,8 +12,9 @@ type AuthContextValue = {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState(localStorage.getItem("transitops_token"));
-  const [role, setRole] = useState<Role | null>((localStorage.getItem("transitops_role") as Role | null) ?? null);
+  // DEMO BYPASS: Always signed in as fleet manager
+  const [token, setToken] = useState<string | null>("demo-bypass-token");
+  const [role, setRole] = useState<Role | null>("fleet_manager");
 
   const value = useMemo<AuthContextValue>(() => ({
     token,

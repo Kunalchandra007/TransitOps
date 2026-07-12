@@ -13,7 +13,7 @@ from app.database import get_db
 from app.models.user import User
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login", auto_error=False)
 
 
 def hash_password(password: str) -> str:
@@ -32,19 +32,11 @@ def create_access_token(user: User) -> str:
 
 
 async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)) -> User:
-    settings = get_settings()
-    credentials_error = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    try:
-        payload = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
-        user_id = UUID(payload.get("sub"))
-    except Exception as exc:
-        raise credentials_error from exc
-
-    user = await db.get(User, user_id)
-    if not user or not user.is_active:
-        raise credentials_error
+    # DEMO BYPASS: Always return the fleet manager
+    user = await db.scalar(select(User).where(User.email == "manager@transitops.io"))
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Database not seeded. Please run reset_db.py",
+        )
     return user
