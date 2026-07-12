@@ -4,7 +4,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import get_settings
 from app.routers import auth, dashboard, drivers, fuel_expense, maintenance, reports, trips, vehicles
 
+# Initialize application settings
 settings = get_settings()
+
+# Create the FastAPI application instance
 app = FastAPI(title="TransitOps API", version="0.1.0")
 
 app.add_middleware(
@@ -25,6 +28,11 @@ app.include_router(dashboard.router)
 app.include_router(reports.router)
 
 
-@app.get("/health")
-async def health():
+@app.get(
+    "/health",
+    tags=["System"],
+    summary="Health Check",
+    description="Returns the operational status of the TransitOps API."
+)
+async def health() -> dict[str, str]:
     return {"status": "ok"}
