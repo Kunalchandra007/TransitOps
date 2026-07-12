@@ -8,7 +8,7 @@ export function Login() {
   const [email, setEmail] = useState("manager@transitops.io");
   const [password, setPassword] = useState("TransitOps123");
   const [error, setError] = useState("");
-  if (token) return <Navigate to="/" replace />;
+  if (token) return <Navigate to="/dashboard" replace />;
 
   async function submit(event: FormEvent) {
     event.preventDefault();
