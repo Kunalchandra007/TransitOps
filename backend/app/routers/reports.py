@@ -11,6 +11,7 @@ from app.auth.rbac import require_role
 from app.database import get_db
 from app.models.enums import TripStatus, UserRole
 from app.models.trip import Trip
+from app.models.vehicle import Vehicle
 from app.services.cost_engine import fuel_efficiency, operational_cost, vehicle_roi
 
 router = APIRouter(prefix="/reports", tags=["reports"], dependencies=[Depends(require_role(UserRole.fleet_manager, UserRole.safety_officer, UserRole.financial_analyst))])
@@ -28,8 +29,28 @@ async def utilization_report(from_date: date | None = None, to_date: date | None
         filters.append(Trip.completed_at >= from_date)
     if to_date:
         filters.append(Trip.completed_at <= to_date)
-    rows = (await db.execute(select(Trip.vehicle_id, func.count(Trip.id)).where(*filters).group_by(Trip.vehicle_id))).all()
-    return [{"vehicle_id": vehicle_id, "completed_trips": count} for vehicle_id, count in rows]
+    rows = (await db.execute(
+        select(Vehicle.id, Vehicle.reg_number, Vehicle.name, func.count(Trip.id))
+        .join(Trip, Trip.vehicle_id == Vehicle.id)
+        .where(*filters)
+        .group_by(Vehicle.id)
+    )).all()
+    
+    result = []
+    for vehicle_id, reg, name, count in rows:
+        eff = await fuel_efficiency(vehicle_id, db)
+        roi = await vehicle_roi(vehicle_id, db)
+        cost = await operational_cost(vehicle_id, db, from_date, to_date)
+        result.append({
+            "vehicle_id": vehicle_id,
+            "reg_number": reg,
+            "name": name,
+            "completed_trips": count,
+            "fuel_efficiency": eff,
+            "roi": roi,
+            "cost": cost
+        })
+    return result
 
 
 @router.get("/operational-cost")

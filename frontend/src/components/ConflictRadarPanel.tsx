@@ -78,7 +78,11 @@ export function ConflictRadarPanel() {
                   ))}
                 </div>
               )}
-              {suggestions[index]?.length === 0 && <p className="mt-3 font-mono text-[11px] text-ink-low">No alternate ranked assignments found.</p>}
+              {suggestions[index]?.length === 0 && (
+                <p className="mt-3 font-mono text-[11px] text-ink-low">
+                  {conflict.type === "capacity_shortage" ? "This needs a new vehicle or driver — not a single reassignment." : "No alternate ranked assignments found."}
+                </p>
+              )}
             </div>
           ))}
         </div>
