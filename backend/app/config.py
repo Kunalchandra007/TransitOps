@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    """Application configuration loaded from environment variables."""
+    """Application configuration loaded from environment variables"""
     database_url: str = "postgresql+asyncpg://transitops:transitops@localhost:5432/transitops"
     secret_key: str = "dev-secret"
     algorithm: str = "HS256"
