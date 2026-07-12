@@ -1,7 +1,10 @@
 import axios from "axios";
 
+const apiBaseUrl = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
+console.log("TransitOps API is pointing to:", apiBaseUrl);
+
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? "http://localhost:8000"
+  baseURL: apiBaseUrl
 });
 
 api.interceptors.request.use((config) => {
