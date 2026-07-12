@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Trip } from "../api/client";
 import { tripsApi } from "../api/resources";
 import { DataTable } from "../components/DataTable";
 import { StatusBadge } from "../components/StatusBadge";
 
 export function TripManagement() {
+  const location = useLocation();
   const [rows, setRows] = useState<Trip[]>([]);
   const load = () => tripsApi.list().then((r) => setRows(r.data));
   useEffect(() => {
     load();
-  }, []);
+  }, [location.key]);
   return (
     <div className="space-y-6">
       <header><h1 className="text-2xl font-bold font-display uppercase tracking-wide text-ink-hi">Trip Management</h1><p className="text-sm text-ink-low mt-2">Create new assignments from the Dispatch view.</p></header>

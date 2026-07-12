@@ -36,6 +36,8 @@ async def seed() -> None:
             Driver(name="Alex Rivera", license_number="ALX-2045", license_category="B", license_expiry=date.today() + timedelta(days=420), safety_score=Decimal("96")),
             Driver(name="Priya Shah", license_number="PRI-1290", license_category="C", license_expiry=date.today() + timedelta(days=4), safety_score=Decimal("88")),
             Driver(name="Noah Chen", license_number="NOA-7744", license_category="B", license_expiry=date.today() + timedelta(days=80), safety_score=Decimal("74")),
+            Driver(name="Samira Jones", license_number="SAM-9999", license_category="C", license_expiry=date.today() + timedelta(days=500), safety_score=Decimal("92")),
+            Driver(name="John Doe", license_number="JOH-1234", license_category="C", license_expiry=date.today() + timedelta(days=365), safety_score=Decimal("95")),
         ]
         db.add_all(vehicles + drivers)
         await db.flush()

@@ -22,8 +22,12 @@ export function TripCreate() {
 
   async function score(e: FormEvent) {
     e.preventDefault();
-    const created = await tripsApi.create({ source: form.source, destination: form.destination, cargo_weight: form.cargo_weight, planned_distance: form.planned_distance });
-    setTrip(created.data);
+    let currentTrip = trip;
+    if (!currentTrip || currentTrip.status !== "Draft") {
+      const created = await tripsApi.create({ source: form.source, destination: form.destination, cargo_weight: form.cargo_weight, planned_distance: form.planned_distance });
+      setTrip(created.data);
+      currentTrip = created.data;
+    }
     const ranked = await tripsApi.eligible(form.cargo_weight, form.region);
     setPairs(ranked.data);
     setSelected(ranked.data[0] ?? null);
